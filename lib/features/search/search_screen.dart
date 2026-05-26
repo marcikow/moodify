@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/providers/album_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/providers/album_provider.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -69,9 +69,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     final album = data[index];
 
                     return AlbumCard(
+                      albumId: album['id'],
                       title: album['title'],
                       artist: album['artist']['name'],
-                      imageUrl: album['album']['cover_medium'],
+                      imageUrl: album['cover_medium'],
                     );
                   },
                 );
@@ -87,12 +88,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 }
 class AlbumCard extends StatelessWidget {
+  final int albumId;
   final String title;
   final String artist;
   final String imageUrl;
 
   const AlbumCard({
     super.key,
+    required this.albumId,
     required this.title,
     required this.artist,
     required this.imageUrl,
@@ -101,10 +104,10 @@ class AlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          context.push(
-            '/album/${Uri.encodeComponent(title)}/${Uri.encodeComponent(artist)}/${Uri.encodeComponent(imageUrl)}',
-          );
+      onTap: () {
+        context.push(
+          '/album/${albumId}',
+        );
       },
       child: Container(
         decoration: BoxDecoration(

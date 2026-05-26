@@ -62,18 +62,10 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const AlbumScreen(),
         ),
         GoRoute(
-          path: '/album/:title/:artist/:image',
-          name: 'albumDetails',
+          path: '/album/:id',
           builder: (context, state) {
-            final title = state.pathParameters['title']!;
-            final artist = state.pathParameters['artist']!;
-            final image = state.pathParameters['image']!;
-
-            return AlbumDetailsScreen(
-              title: title,
-              artist: artist,
-              imageUrl: image,
-            );
+            final id = state.pathParameters['id']!;
+            return AlbumDetailsScreen(albumId: int.parse(id));
           },
         ),
       ],
