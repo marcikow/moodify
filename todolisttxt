@@ -1,0 +1,146 @@
+TO DO:
+App:
+- Sign in/ Sign up
+- ui polish
+- languages
+- cache API
+- chat feature (global, dm, by genres or vibes tags)
+Home:
+- Last searched
+- new albums
+- hot albums
+Search:
+- fixed Album Cards
+- if possible, search by genre or mood
+Album details:
+- add to favorites
+- add to CD wishlist
+- rate album
+- pin to profile
+- seconds to mm:ss
+- album rating
+- album popularity (by spotify streams if possible, if not, some streaming api)
+Album:
+- change to Profile
+- List of favorites
+- List of wishlisted
+- last ratings
+- profile and app settings tab (for example in top right of profile
+- profile avatar and nickname
+- basic info (optional)
+
+App:
+
+Firebase Authentication **
+Firebase Firestore (profile, favorites sync) **
+Isar / ObjectBox local database (favorites, ratings, wishlist) **
+.env configuration (Envied) **
+i18n / l10n language support **
+FlexColorScheme (dark/light mode) **
+GoogleFonts usage **
+Forms (login, signup, rating, profile edit) **
+Navigation (GoRouter: push/pop/replace/named routes) **
+Riverpod state management (auth, settings, search, favorites) **
+Dio API communication + JSON models (freezed/json_serializable) **
+API cache layer !!!
+GetStorage / SharedPreferences (search history, settings) *
+UI polish + animations *
+
+Home:
+
+Last searched (GetStorage / DB) *
+New albums *
+Hot albums *
+
+Search:
+
+Fixed Album Cards *
+Search input + live results *
+Search by genre/mood !!!
+
+Album details:
+
+Add to favorites **
+Wishlist (CD list) **
+Rate album **
+Album rating display **
+Tracklist (mm:ss formatting) *
+Album popularity (Deezer rank / external API workaround) !!!
+Pin to profile *
+
+Album / Profile:
+
+Profile screen instead of album tab *
+Favorites list **
+Wishlist list **
+Last ratings history **
+Profile avatar + nickname **
+Settings tab (theme, language, account) **
+Basic user info *
+
+Extras (overkill / risky scope):
+
+Chat feature (global / DM / genres/vibes) -
+Spotify streaming popularity API integration -
+Advanced recommendation system -
+Real-time social features -
+
+
+Legenda:
+
+✔ = masz już / działa
+⚠️ = częściowo / trzeba dopiąć
+❌ = brakuje
+★ = wymagane (gwiazdka z wytycznych)
+!!! = do wyboru (4 z tej grupy)
+📌 TO DO — STATUS PROJEKTU
+App:
+Sign in / Sign up ★ ❌
+ui polish ★ ❌
+languages ★ ❌
+cache API !!! ⚠️ (DIO jest, cache brak)
+chat feature (global, dm, by genres or vibes tags) - ❌ (overkill)
+Home:
+Last searched !!! ⚠️ (możliwe, ale brak pełnej implementacji)
+new albums !!! ⚠️ (API możliwe, UI brak)
+hot albums !!! ⚠️ (API możliwe, UI brak)
+Search:
+fixed Album Cards ✔
+search input + live results ✔
+search by genre or mood !!! ⚠️ (tylko search text, brak filtrów)
+Album details:
+add to favorites ✔
+add to CD wishlist ⚠️ (UI brak, system częściowo do zrobienia)
+rate album ⚠️ (brak pełnego systemu DB)
+pin to profile ⚠️ (brak implementacji)
+seconds to mm:ss ❌
+album rating ❌
+album popularity !!! ⚠️ (Deezer rank można użyć, ale brak UI/logiki)
+Album / Profile:
+change to Profile ⚠️ (UI jeszcze nie ma pełnego profilu)
+List of favorites ✔ (logika jest)
+List of wishlisted ❌
+last ratings ❌
+profile and app settings tab ❌
+profile avatar and nickname ❌
+basic info ⚠️
+📌 BRAKUJĄCE Z WYMAGAŃ (NAJWAŻNIEJSZE)
+★ MUST HAVE (z gwiazdką z wytycznych):
+Sign in / Sign up ❌
+UI polish ❌
+languages ❌
+FlexColorScheme (dark/light) ❌
+GoogleFonts ❌
+Forms (login / signup / rating / profile edit) ❌
+!!! DO WYBORU (musisz mieć 4):
+
+Najbezpieczniejszy zestaw dla Ciebie:
+
+Firebase Auth + Firestore ❌
+Isar / ObjectBox (local DB) ❌
+.env (Envied) ❌
+i18n / l10n ❌
+(ALTERNATYWY NIE WYBRANE)
+SharedPreferences / GetStorage ✔ (masz GetStorage, ale to tylko pomocnicze)
+Mapa / lokalizacja ❌ (niepotrzebne)
+

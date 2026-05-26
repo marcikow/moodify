@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/providers/album_provider.dart';
+import '../../core/providers/favorites_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../album/widgets/album_card.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -68,12 +71,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   itemBuilder: (context, index) {
                     final album = data[index];
 
-                    return AlbumCard(
-                      albumId: album['id'],
-                      title: album['title'],
-                      artist: album['artist']['name'],
-                      imageUrl: album['cover_medium'],
-                    );
+                    return AlbumCard(album: album);
                   },
                 );
               },
@@ -83,78 +81,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-class AlbumCard extends StatelessWidget {
-  final int albumId;
-  final String title;
-  final String artist;
-  final String imageUrl;
-
-  const AlbumCard({
-    super.key,
-    required this.albumId,
-    required this.title,
-    required this.artist,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.push(
-          '/album/${albumId}',
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey.shade900,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-                child: Image.network(
-                  imageUrl,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    artist,
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
