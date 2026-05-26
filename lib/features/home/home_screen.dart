@@ -12,18 +12,6 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("Home"),
-            ElevatedButton(
-              onPressed: () {
-                context.push('/search');
-              },
-              child: const Text("Go to Search"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                context.push('/album');
-              },
-              child: const Text("Go to Album"),
-            ),
           ],
         ),
       ),
