@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/album_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -100,10 +101,10 @@ class AlbumCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Clicked: $title")),
-        );
+        onTap: () {
+          context.push(
+            '/album/${Uri.encodeComponent(title)}/${Uri.encodeComponent(artist)}/${Uri.encodeComponent(imageUrl)}',
+          );
       },
       child: Container(
         decoration: BoxDecoration(

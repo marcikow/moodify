@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../features/home/home_screen.dart';
 import '../features/search/search_screen.dart';
 import '../features/album/album_screen.dart';
+import '../features/album/album_details_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -60,6 +61,21 @@ final GoRouter appRouter = GoRouter(
           path: '/album',
           builder: (context, state) => const AlbumScreen(),
         ),
+        GoRoute(
+          path: '/album/:title/:artist/:image',
+          name: 'albumDetails',
+          builder: (context, state) {
+            final title = state.pathParameters['title']!;
+            final artist = state.pathParameters['artist']!;
+            final image = state.pathParameters['image']!;
+
+            return AlbumDetailsScreen(
+              title: title,
+              artist: artist,
+              imageUrl: image,
+            );
+          },
+        ),
       ],
     ),
   ],
@@ -70,3 +86,4 @@ int _getIndex(String location) {
   if (location.startsWith('/album')) return 2;
   return 0;
 }
+
