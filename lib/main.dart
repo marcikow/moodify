@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_storage/get_storage.dart';
-import 'router/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:albums/features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: AuthWrapper(),
     );
   }
 }
