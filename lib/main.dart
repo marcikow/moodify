@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
 import 'router/app_router.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
+  await Firebase.initializeApp();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -14,9 +16,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      routerConfig: appRouter,
+      home: Scaffold(
+        body: Center(
+          child: Text("Firebase connected 🚀"),
+        ),
+      ),
     );
   }
 }
