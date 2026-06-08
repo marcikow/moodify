@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/album_provider.dart';
+import '/core/utils/time_utils.dart';
 
 class AlbumDetailsScreen extends ConsumerWidget {
   final int albumId;
@@ -52,7 +53,7 @@ class AlbumDetailsScreen extends ConsumerWidget {
                       leading: Text("${index + 1}"),
                       title: Text(track['title']),
                       trailing: Text(
-                        "${track['duration']}s",
+                        formatDuration(track['duration']),
                         style: const TextStyle(color: Colors.grey),
                       ),
                     );

@@ -38,6 +38,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   query = value;
                 });
               },
+
+              textInputAction: TextInputAction.search,
+
+              onSubmitted: (_) {
+                FocusScope.of(context).unfocus();
+              },
+
               decoration: InputDecoration(
                 hintText: "Search albums...",
                 prefixIcon: const Icon(Icons.search),

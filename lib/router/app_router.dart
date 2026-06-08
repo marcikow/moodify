@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../features/home/home_screen.dart';
 import '../features/search/search_screen.dart';
 import '../features/album/album_screen.dart';
 import '../features/album/album_details_screen.dart';
 
+import '../features/auth/presentation/login_screen.dart';
+import '../features/auth/presentation/register_screen.dart';
+
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
+
+  redirect: (context, state) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    final isAuthRoute =
+        state.matchedLocation == '/login' ||
+            state.matchedLocation == '/register';
+
+    // jeśli NIE zalogowany → tylko login/register
+    if (user == null && !isAuthRoute) {
+      return '/login';
+    }
+
+    // jeśli zalogowany → nie pozwalaj wrócić do login/register
+    if (user != null && isAuthRoute) {
+      return '/';
+    }
+
+    return null;
+  },
+
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -70,6 +95,15 @@ final GoRouter appRouter = GoRouter(
         ),
       ],
     ),
+
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
   ],
 );
 
@@ -78,4 +112,3 @@ int _getIndex(String location) {
   if (location.startsWith('/album')) return 2;
   return 0;
 }
-

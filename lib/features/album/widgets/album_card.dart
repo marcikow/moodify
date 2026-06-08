@@ -19,64 +19,71 @@ class AlbumCard extends ConsumerWidget {
       ),
     );
 
-    return InkWell(
-      onTap: () {
-        context.push('/album/${album['id']}');
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey.shade900,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Image.network(
-                    album['cover_medium'],
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: IconButton(
-                      icon: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.red,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Material(
+        color: Colors.grey.shade900,
+        child: InkWell(
+          onTap: () {
+            context.push('/album/${album['id']}');
+          },
+          child: Column(
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Image.network(
+                        album['cover_medium'],
+                        fit: BoxFit.cover,
                       ),
-                      onPressed: () {
-                        ref
-                            .read(favoritesProvider.notifier)
-                            .toggle(album);
-                      },
                     ),
-                  ),
-                ],
+
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: IconButton(
+                        icon: Icon(
+                          isFav
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(favoritesProvider.notifier)
+                              .toggle(album);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    album['title'],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    album['artist']['name'],
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      album['title'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      album['artist']['name'],
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

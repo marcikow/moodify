@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../application/auth_provider.dart';
-import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'widgets/auth_field.dart';
 
-class RegisterScreen extends ConsumerStatefulWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+class _RegisterScreenState extends State<RegisterScreen> {
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   bool loading = false;
+
+  Future<void> register() async {
+    setState(() => loading = true);
+
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email.text.trim(),
+      password: password.text.trim(),
+    );
+
+    setState(() => loading = false);
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,52 +37,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Create account",
+              "Register",
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
 
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
-            ),
+            AuthField(controller: email, label: "Email"),
 
             const SizedBox(height: 12),
 
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Password"),
+            AuthField(
+              controller: password,
+              label: "Password",
+              obscure: true,
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: loading
-                    ? null
-                    : () async {
-                  setState(() => loading = true);
-
-                  await ref
-                      .read(authRepositoryProvider)
-                      .signUp(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                  );
-
-                  setState(() => loading = false);
-                },
+                onPressed: loading ? null : register,
                 child: loading
                     ? const CircularProgressIndicator()
-                    : const Text("Register"),
+                    : const Text("Create account"),
               ),
-            ),
-            TextButton(
-              onPressed: () => context.pop(),
-              child: const Text("Back to login"),
             ),
           ],
         ),
