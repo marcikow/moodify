@@ -55,19 +55,35 @@ class ProfileScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final album = favorites[index];
 
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: ListTile(
-                      onTap: () {
-                        context.push('/album/${album['id']}');
-                      },
-                      leading: Image.network(
-                        album['cover_medium'],
-                        width: 50,
-                        fit: BoxFit.cover,
+                  return Dismissible(
+                    key: ValueKey(album['id']),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (_) {
+                      ref.read(favoritesProvider.notifier).toggle(album);
+                    },
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      color: Colors.red,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
                       ),
-                      title: Text(album['title']),
-                      subtitle: Text(album['artist']['name']),
+                    ),
+                    child: Card(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: ListTile(
+                        onTap: () {
+                          context.push('/album/${album['id']}');
+                        },
+                        leading: Image.network(
+                          album['cover_medium'],
+                          width: 50,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(album['title']),
+                        subtitle: Text(album['artist']['name']),
+                      ),
                     ),
                   );
                 },
