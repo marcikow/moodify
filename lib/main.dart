@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import '../../core/providers/locale_provider.dart';
+import '../../core/providers/theme_provider.dart';
 
 import 'router/app_router.dart';
 
@@ -13,18 +15,18 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
 
+      themeMode: ref.watch(themeProvider),
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
 
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         Locale('en'),
         Locale('pl'),
       ],
+      locale: Locale(ref.watch(localeProvider)),
     );
   }
 }
