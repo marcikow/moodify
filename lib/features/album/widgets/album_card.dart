@@ -22,7 +22,7 @@ class AlbumCard extends ConsumerWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Material(
-        color: Colors.grey.shade900,
+        color: Theme.of(context).cardColor,
         child: InkWell(
           onTap: () {
             context.push('/album/${album['id']}');
@@ -70,14 +70,12 @@ class AlbumCard extends ConsumerWidget {
                       album['title'],
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       album['artist']['name'],
-                      style: const TextStyle(color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),

@@ -81,8 +81,8 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const SearchScreen(),
         ),
         GoRoute(
-          path: '/album',
-          builder: (context, state) => const AlbumScreen(),
+          path: '/profile',
+          builder: (context, state) => const ProfileScreen(),
         ),
         GoRoute(
           path: '/album/:id',
