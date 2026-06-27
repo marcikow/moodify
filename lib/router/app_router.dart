@@ -15,9 +15,19 @@ import '../router/app_shell.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    stream.listen((_) => notifyListeners());
+  }
+}
+
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
+
+  refreshListenable: GoRouterRefreshStream(
+    FirebaseAuth.instance.authStateChanges(),
+  ),
 
   redirect: (context, state) {
     final user = FirebaseAuth.instance.currentUser;
@@ -26,8 +36,13 @@ final GoRouter appRouter = GoRouter(
         state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
 
-    if (user == null && !isAuthRoute) return '/login';
-    if (user != null && isAuthRoute) return '/';
+    if (user == null && !isAuthRoute) {
+      return '/login';
+    }
+
+    if (user != null && isAuthRoute) {
+      return '/';
+    }
 
     return null;
   },
@@ -38,9 +53,18 @@ final GoRouter appRouter = GoRouter(
         return AppShell(child: child);
       },
       routes: [
-        GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
-        GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
-        GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
+        GoRoute(
+          path: '/',
+          builder: (_, __) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/search',
+          builder: (_, __) => const SearchScreen(),
+        ),
+        GoRoute(
+          path: '/profile',
+          builder: (_, __) => const ProfileScreen(),
+        ),
         GoRoute(
           path: '/album/:id',
           builder: (_, state) {
@@ -55,7 +79,13 @@ final GoRouter appRouter = GoRouter(
       ],
     ),
 
-    GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-    GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
+    GoRoute(
+      path: '/login',
+      builder: (_, __) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (_, __) => const RegisterScreen(),
+    ),
   ],
 );

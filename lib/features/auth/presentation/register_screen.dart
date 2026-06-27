@@ -30,7 +30,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       );
 
       if (mounted) {
-        context.go('/'); // albo home przez router
+        context.go('/');
       }
     } catch (e) {
       if (mounted) {

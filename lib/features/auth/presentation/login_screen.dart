@@ -22,6 +22,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool loading = false;
 
   Future<void> login() async {
+    if (email.text.isEmpty || password.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Fill all fields")),
+      );
+      return;
+    }
+
     setState(() => loading = true);
 
     try {
@@ -29,15 +36,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         email: email.text.trim(),
         password: password.text.trim(),
       );
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String message;
+
+      switch (e.code) {
+        case 'user-not-found':
+          message = 'User not found';
+          break;
+        case 'wrong-password':
+          message = 'Wrong password';
+          break;
+        case 'invalid-credential':
+          message = 'Invalid credentials';
+          break;
+        case 'too-many-requests':
+          message = 'Too many attempts. Try later.';
+          break;
+        default:
+          message = e.message ?? 'Login error';
+      }
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $e")),
+          SnackBar(content: Text(message)),
         );
       }
+    } finally {
+      if (mounted) {
+        setState(() => loading = false);
+      }
     }
-
-    setState(() => loading = false);
   }
 
   @override
