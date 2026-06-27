@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../core/providers/album_provider.dart';
-import '../../core/providers/favorites_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../album/widgets/album_card.dart';
+import '../../core/providers/album_provider.dart';
+import '../../core/storage/app_storage.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -15,14 +13,27 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   String query = "";
+  String? lastSearch;
+
+  @override
+  void initState() {
+    super.initState();
+    loadLastSearch();
+  }
+
+  Future<void> loadLastSearch() async {
+    final last = await AppStorage.getLastSearch();
+
+    setState(() {
+      lastSearch = last;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final hasQuery = query.trim().isNotEmpty;
 
-    final albums = hasQuery
-        ? ref.watch(albumSearchProvider(query))
-        : null;
+    final albums = hasQuery ? ref.watch(albumSearchProvider(query)) : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -30,6 +41,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ),
       body: Column(
         children: [
+          if (lastSearch != null && lastSearch!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Last search: $lastSearch",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
@@ -38,13 +61,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   query = value;
                 });
               },
-
               textInputAction: TextInputAction.search,
-
-              onSubmitted: (_) {
-                FocusScope.of(context).unfocus();
+              onSubmitted: (value) async {
+                await AppStorage.saveLastSearch(value);
               },
-
               decoration: InputDecoration(
                 hintText: "Search albums...",
                 prefixIcon: const Icon(Icons.search),
@@ -77,7 +97,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     final album = data[index];
-
                     return AlbumCard(album: album);
                   },
                 );
