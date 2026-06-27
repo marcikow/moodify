@@ -6,34 +6,53 @@ import 'package:go_router/go_router.dart';
 import '../../core/providers/locale_provider.dart';
 import '../../core/providers/theme_provider.dart';
 
+import '../../core/l10n/app_strings.dart';
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final lang = ref.watch(localeProvider);
+    final theme = ref.watch(themeProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: Text(AppStrings.get("settings", lang)),
       ),
       body: ListView(
         children: [
           ListTile(
             leading: const Icon(Icons.language),
-            title: const Text("Language"),
-            subtitle: const Text("EN / PL"),
+            title: Text(AppStrings.get("language", lang)),
+            subtitle: Text(lang == "en" ? "English" : "Polski"),
             onTap: () {
               final current = ref.read(localeProvider);
 
-              ref
-                  .read(localeProvider.notifier)
-                  .setLocale(current == "en" ? "pl" : "en");
+              final newLang = current == "en" ? "pl" : "en";
+
+              ref.read(localeProvider.notifier).setLocale(newLang);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    newLang == "en" ? "English selected" : "Polski wybrany",
+                  ),
+                  duration: const Duration(milliseconds: 800),
+                ),
+              );
             },
           ),
 
           ListTile(
             leading: const Icon(Icons.brightness_6),
-            title: const Text("Theme"),
-            subtitle: const Text("Light / Dark / System"),
+            title: Text(AppStrings.get("theme", lang)),
+            subtitle: Text(
+              switch (theme) {
+                ThemeMode.light => "Light",
+                ThemeMode.dark => "Dark",
+                ThemeMode.system => "System",
+              },
+            ),
             onTap: () {
               final current = ref.read(themeProvider);
 
@@ -49,7 +68,7 @@ class SettingsScreen extends ConsumerWidget {
 
           ListTile(
             leading: const Icon(Icons.delete_forever),
-            title: const Text("Delete account"),
+            title: Text(AppStrings.get("delete_account", lang)),
             onTap: () async {
               final confirm = await showDialog<bool>(
                 context: context,

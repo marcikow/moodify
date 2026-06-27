@@ -193,16 +193,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  dotenv:
-    dependency: "direct main"
-    description:
-      name: dotenv
-      sha256: "379e64b6fc82d3df29461d349a1796ecd2c436c480d4653f3af6872eccbc90e1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.0"
   envied:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: envied
       sha256: d165fc1f74195948b8dc38d69b7b63fc3d68b5e24d028b9a36299ff488818405

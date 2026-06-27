@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/providers/album_provider.dart';
+import '../../core/providers/locale_provider.dart';
 import '/core/utils/time_utils.dart';
 
 class AlbumDetailsScreen extends ConsumerWidget {
@@ -14,6 +16,7 @@ class AlbumDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final album = ref.watch(albumDetailsProvider(albumId));
+    final lang = ref.watch(localeProvider);
 
     return Scaffold(
       body: album.when(
@@ -68,10 +71,18 @@ class AlbumDetailsScreen extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Text(
-                    "Artist: ${data['artist']['name']}",
-                    style: const TextStyle(fontSize: 18),
-                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        "${AppStrings.get("artist", lang)}: ",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      Text(
+                        data['artist']['name'],
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  )
                 ),
               ),
 

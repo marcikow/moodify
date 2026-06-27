@@ -11,6 +11,8 @@ import '../features/settings/settings_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 
+import '../router/app_shell.dart';
+
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
@@ -24,13 +26,8 @@ final GoRouter appRouter = GoRouter(
         state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
 
-    if (user == null && !isAuthRoute) {
-      return '/login';
-    }
-
-    if (user != null && isAuthRoute) {
-      return '/';
-    }
+    if (user == null && !isAuthRoute) return '/login';
+    if (user != null && isAuthRoute) return '/';
 
     return null;
   },
@@ -38,80 +35,27 @@ final GoRouter appRouter = GoRouter(
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        return Scaffold(
-          body: child,
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _getIndex(state.uri.toString()),
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  context.go('/');
-                  break;
-                case 1:
-                  context.go('/search');
-                  break;
-                case 2:
-                  context.go('/profile');
-                  break;
-              }
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Search',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_box),
-                label: 'Profile',
-              ),
-            ],
-          ),
-        );
+        return AppShell(child: child);
       },
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const HomeScreen(),
-        ),
-        GoRoute(
-          path: '/search',
-          builder: (context, state) => const SearchScreen(),
-        ),
-        GoRoute(
-          path: '/profile',
-          builder: (context, state) => const ProfileScreen(),
-        ),
+        GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
+        GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+        GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
         GoRoute(
           path: '/album/:id',
-          builder: (context, state) {
+          builder: (_, state) {
             final id = state.pathParameters['id']!;
             return AlbumDetailsScreen(albumId: int.parse(id));
           },
         ),
         GoRoute(
           path: '/settings',
-          builder: (context, state) => const SettingsScreen(),
+          builder: (_, __) => const SettingsScreen(),
         ),
       ],
     ),
 
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      builder: (context, state) => const RegisterScreen(),
-    ),
+    GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+    GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
   ],
 );
-
-int _getIndex(String location) {
-  if (location.startsWith('/search')) return 1;
-  if (location.startsWith('/profile')) return 2;
-  return 0;
-}

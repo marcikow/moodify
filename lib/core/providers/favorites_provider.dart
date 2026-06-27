@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final favoritesProvider =
 StateNotifierProvider<FavoritesNotifier, List<Map<String, dynamic>>>(
@@ -9,21 +10,21 @@ StateNotifierProvider<FavoritesNotifier, List<Map<String, dynamic>>>(
 
 class FavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   FavoritesNotifier() : super([]) {
-    _load();
+    load();
   }
 
-  static const String _favKey = "favorites";
+  String _key() {
+    final uid = FirebaseAuth.instance.currentUser?.uid ?? "guest";
+    return "favorites_$uid";
+  }
 
-  Future<void> _load() async {
+  Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString(_favKey);
+    final data = prefs.getString(_key());
 
-    if (data == null) return;
-
-    try {
-      final decoded = jsonDecode(data);
-      state = List<Map<String, dynamic>>.from(decoded);
-    } catch (_) {
+    if (data != null) {
+      state = List<Map<String, dynamic>>.from(jsonDecode(data));
+    } else {
       state = [];
     }
   }
@@ -37,15 +38,21 @@ class FavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       state = [...state, album];
     }
 
-    await _save(state);
+    await _save();
+  }
+
+  Future<void> _save() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_key(), jsonEncode(state));
   }
 
   bool isFavorite(int id) {
     return state.any((a) => a['id'] == id);
   }
 
-  Future<void> _save(List<Map<String, dynamic>> favs) async {
+  Future<void> clear() async {
+    state = [];
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_favKey, jsonEncode(favs));
+    await prefs.remove(_key());
   }
 }

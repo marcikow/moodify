@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/favorites_provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/app_strings.dart';
+import '../../core/providers/locale_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -11,10 +13,11 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
     final favorites = ref.watch(favoritesProvider);
+    final lang = ref.watch(localeProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: Text(AppStrings.get("profile", lang)),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -43,9 +46,9 @@ class ProfileScreen extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            const Text(
-              "Favorite Albums",
-              style: TextStyle(
+            Text(
+              AppStrings.get("favorites", lang),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -55,8 +58,8 @@ class ProfileScreen extends ConsumerWidget {
 
             Expanded(
               child: favorites.isEmpty
-                  ? const Center(
-                child: Text("No favorite albums yet"),
+                  ? Center(
+                child: Text(AppStrings.get("no_favorites", lang)),
               )
                   : ListView.builder(
                 itemCount: favorites.length,

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../album/widgets/album_card.dart';
 import '../../core/providers/album_provider.dart';
 import '../../core/storage/app_storage.dart';
+import '../../core/providers/locale_provider.dart';
+import '../../core/l10n/app_strings.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -31,13 +34,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(localeProvider);
     final hasQuery = query.trim().isNotEmpty;
 
     final albums = hasQuery ? ref.watch(albumSearchProvider(query)) : null;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search Albums"),
+        title: Text(AppStrings.get("search", lang)),
       ),
       body: Column(
         children: [
@@ -66,7 +70,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 await AppStorage.saveLastSearch(value);
               },
               decoration: InputDecoration(
-                hintText: "Search albums...",
+                hintText: AppStrings.get("search_hint", lang),
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -77,10 +81,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
           Expanded(
             child: !hasQuery
-                ? const Center(
+                ? Center(
               child: Text(
-                "Start typing to search albums 🎧",
-                style: TextStyle(color: Colors.grey),
+                AppStrings.get("start_typing", lang),
+                style: const TextStyle(color: Colors.grey),
               ),
             )
                 : albums!.when(

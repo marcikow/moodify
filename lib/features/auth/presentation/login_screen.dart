@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'widgets/auth_field.dart';
 import 'register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+import '../../../core/providers/locale_provider.dart';
+import '../../../core/l10n/app_strings.dart';
+
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -19,36 +24,72 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> login() async {
     setState(() => loading = true);
 
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email.text.trim(),
-      password: password.text.trim(),
-    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.text.trim(),
+        password: password.text.trim(),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
+    }
 
     setState(() => loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(localeProvider);
+
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () {
+              final current = ref.read(localeProvider);
+              ref
+                  .read(localeProvider.notifier)
+                  .setLocale(current == "en" ? "pl" : "en");
+            },
+            child: Text(lang.toUpperCase()),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Login",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            Text(
+              AppStrings.get("login", lang),
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              AppStrings.get("welcome_back", lang),
+              style: const TextStyle(color: Colors.grey),
             ),
 
             const SizedBox(height: 30),
 
-            AuthField(controller: email, label: "Email"),
+            AuthField(
+              controller: email,
+              label: AppStrings.get("email", lang),
+            ),
 
             const SizedBox(height: 12),
 
             AuthField(
               controller: password,
-              label: "Password",
+              label: AppStrings.get("password", lang),
               obscure: true,
             ),
 
@@ -60,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: loading ? null : login,
                 child: loading
                     ? const CircularProgressIndicator()
-                    : const Text("Login"),
+                    : Text(AppStrings.get("login", lang)),
               ),
             ),
 
@@ -73,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 );
               },
-              child: const Text("Create account"),
+              child: Text(AppStrings.get("register", lang)),
             ),
           ],
         ),
