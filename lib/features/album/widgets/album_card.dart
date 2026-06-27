@@ -43,18 +43,23 @@ class AlbumCard extends ConsumerWidget {
                     Positioned(
                       right: 8,
                       top: 8,
-                      child: IconButton(
-                        icon: Icon(
-                          isFav
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Colors.red,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.black54,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            isFav
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            ref
+                                .read(favoritesProvider.notifier)
+                                .toggle(album);
+                          },
                         ),
-                        onPressed: () {
-                          ref
-                              .read(favoritesProvider.notifier)
-                              .toggle(album);
-                        },
                       ),
                     ),
                   ],
