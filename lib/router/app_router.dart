@@ -6,6 +6,7 @@ import '../features/home/home_screen.dart';
 import '../features/search/search_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/album/album_details_screen.dart';
+import '../features/settings/settings_screen.dart';
 
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
@@ -90,6 +91,10 @@ final GoRouter appRouter = GoRouter(
             final id = state.pathParameters['id']!;
             return AlbumDetailsScreen(albumId: int.parse(id));
           },
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsScreen(),
         ),
       ],
     ),
