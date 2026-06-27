@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../features/home/home_screen.dart';
 import '../features/search/search_screen.dart';
-import '../features/album/album_screen.dart';
+import '../features/profile/profile_screen.dart';
 import '../features/album/album_details_screen.dart';
 
 import '../features/auth/presentation/login_screen.dart';
@@ -23,12 +23,10 @@ final GoRouter appRouter = GoRouter(
         state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
 
-    // jeśli NIE zalogowany → tylko login/register
     if (user == null && !isAuthRoute) {
       return '/login';
     }
 
-    // jeśli zalogowany → nie pozwalaj wrócić do login/register
     if (user != null && isAuthRoute) {
       return '/';
     }
@@ -52,7 +50,7 @@ final GoRouter appRouter = GoRouter(
                   context.go('/search');
                   break;
                 case 2:
-                  context.go('/album');
+                  context.go('/profile');
                   break;
               }
             },
@@ -66,8 +64,8 @@ final GoRouter appRouter = GoRouter(
                 label: 'Search',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.album),
-                label: 'Album',
+                icon: Icon(Icons.account_box),
+                label: 'Profile',
               ),
             ],
           ),
@@ -109,6 +107,6 @@ final GoRouter appRouter = GoRouter(
 
 int _getIndex(String location) {
   if (location.startsWith('/search')) return 1;
-  if (location.startsWith('/album')) return 2;
+  if (location.startsWith('/profile')) return 2;
   return 0;
 }
